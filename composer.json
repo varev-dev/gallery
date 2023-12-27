@@ -1,0 +1,6 @@
+{
+    "name": "root/gallery",
+    "require": {
+        "mongodb/mongodb": "^1.1"
+    }
+}
