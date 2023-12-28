@@ -31,6 +31,17 @@ img.gallery_image {
     padding: 15px 25px;
 }
 
+.page_change {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    justify-content: center;
+}
+
+.page_btn {
+    width: 12ch;
+}
+
 footer {
     width: 100vw;
     display: flex;

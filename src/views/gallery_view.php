@@ -22,17 +22,17 @@
         <?php else: ?>
             <p>No images<?= isset($_GET['page']) ? " on page " . $_GET['page'] : 'in gallery'?></p>
         <?php endif ?>
-        <div>
+        <div class="page_change">
             <?php if ($page != 1): ?>
                 <form name="previous_page" method="get">
                     <input type="number" name="page" value="<?=$page - 1?>" hidden="hidden"/>
-                    <input type="submit" value="Previous">
+                    <input type="submit" class="page_btn" value="Previous">
                 </form>
             <?php endif ?>
             <?php if ($page < $maxPage): ?>
                 <form name="next_page" method="get">
                     <input type="number" name="page" value="<?=$page + 1?>" hidden="hidden"/>
-                    <input type="submit" value="Next">
+                    <input type="submit" class="page_btn" value="Next">
                 </form>
             <?php endif ?>
         </div>
