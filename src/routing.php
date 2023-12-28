@@ -2,5 +2,6 @@
 
 $routing = [
     '/' => 'gallery',
-    '/gallery' => 'gallery'
+    '/gallery' => 'gallery',
+    '/upload' => 'upload_image'
 ];

@@ -6,7 +6,10 @@
     </head>
     <body>
         <header>
-            <h1 class="title_bar">Gallery</h1>
+            <div>
+                <h1 class="title_bar">Gallery</h1>
+                <a href="/upload"><button>Upload Image</button></a>
+            </div>
             <hr>
         </header>
         <?php if(count($images)): ?>
@@ -22,7 +25,7 @@
         <?php else: ?>
             <p>No images<?= isset($_GET['page']) ? " on page " . $_GET['page'] : 'in gallery'?></p>
         <?php endif ?>
-        <div class="page_change">
+        <div class="centered">
             <?php if ($page != 1): ?>
                 <form name="previous_page" method="get">
                     <input type="number" name="page" value="<?=$page - 1?>" hidden="hidden"/>
