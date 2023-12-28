@@ -4,7 +4,7 @@ const IMAGES_PER_PAGE = 12;
 
 function get_last_page_number(): int {
     $images = get_images();
-    return count($images) / IMAGES_PER_PAGE;
+    return ceil(count($images) / IMAGES_PER_PAGE);
 }
 
 function get_images_from_page(int $page): array{
