@@ -6,6 +6,14 @@ body {
     color: aliceblue;
 }
 
+header div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 50px;
+}
+
 .title_bar {
     padding-left: 50px;
 }
@@ -31,7 +39,7 @@ img.gallery_image {
     padding: 15px 25px;
 }
 
-.page_change {
+.centered {
     display: flex;
     flex-direction: row;
     gap: 50px;
@@ -40,6 +48,28 @@ img.gallery_image {
 
 .page_btn {
     width: 12ch;
+}
+
+.upload_form {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.validation_error {
+    padding: 15px;
+    max-width: 250px;
+}
+
+.validation_content {
+    color: red;
+}
+
+.cancel {
+    color: white;
 }
 
 footer {
