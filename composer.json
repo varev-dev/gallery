@@ -2,6 +2,7 @@
     "name": "root/gallery",
     "require": {
         "mongodb/mongodb": "^1.1",
-        "ext-gd": "*"
+        "ext-gd": "*",
+        "ext-mongodb": "*"
     }
 }
