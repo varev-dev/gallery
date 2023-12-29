@@ -1,4 +1,8 @@
 <?php
+
+use MongoDB\BSON\ObjectID;
+use MongoDB\Database;
+
 const IMAGE_DIR = "images", IMAGE_BUILD_DIR = "images/build", IMAGES_PER_PAGE = 12;
 const FONT_SIZE = 35, FONT_FAMILY = "Roboto-Regular.ttf";
 const THUMBNAIL_WIDTH = 200, THUMBNAIL_HEIGHT = 125;
@@ -6,16 +10,27 @@ const WATERMARK_MODE = "wat", THUMBNAIL_MODE = "min";
 
 require_once 'business_utils.php';
 
+function get_db(): Database {
+    $mongo = new MongoDB\Client(
+        "mongodb://localhost:27017/wai",
+        [
+            'username' => 'wai_web',
+            'password' => 'w@i_w3b',
+        ]);
+
+    return $mongo->wai;
+}
+
 function get_last_page_number(): int {
-    $images = get_images();
-    return ceil(count($images) / IMAGES_PER_PAGE);
+    return ceil(number_of_images_in_db() / IMAGES_PER_PAGE);
 }
 
 function get_images_from_page(int $page): array{
-    $images = get_images();
+    $images = get_images_from_db($page);
 
-    $offset = ($page - 1) * IMAGES_PER_PAGE;
-    $images = array_slice($images, $offset, IMAGES_PER_PAGE);
+    foreach ($images as $image) {
+        $image["name"] = IMAGE_DIR . "/" . $image["name"];
+    }
 
     return $images;
 }
@@ -26,7 +41,9 @@ function get_images(): array {
 
     $data = [
         "name" => null,
-        "extension" => null
+        "extension" => null,
+        "title" => null,
+        "author" => null
     ];
 
     if (!$files)
@@ -41,8 +58,8 @@ function get_images(): array {
         $data["name"] = substr($file, 0, strrpos($file, "-wat"));
         $data["extension"] = $extension;
 
-        if (!file_exists($data["name"].".".$data["extension"]) ||
-            !file_exists($data["name"]."-min.".$data["extension"]))
+        if (!file_exists($data["name"].".".$extension) ||
+            !file_exists($data["name"]."-min.".$extension))
             continue;
 
         $images[] = $data;
@@ -72,4 +89,26 @@ function edit_image(string $path, string $mode, string $watermark = null): bool 
 
     imagedestroy($image);
     return true;
+}
+
+function save_image($image): bool {
+    $db = get_db();
+    return $db->images->insertOne($image)->isAcknowledged();
+}
+
+function get_images_from_db(int $page): array {
+    $db = get_db();
+
+    $options = [
+        'skip' => ($page-1) * IMAGES_PER_PAGE,
+        'limit' => IMAGES_PER_PAGE
+    ];
+
+    return $db->images->find([], $options)->toArray();
+}
+
+function number_of_images_in_db(): int {
+    $db = get_db();
+
+    return $db->images->count();
 }
