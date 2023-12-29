@@ -1,4 +1,5 @@
 <?php
+require_once 'controllers_utils.php';
 require_once 'business.php';
 
 define("IMAGE_MAX_SIZE", pow(2, 20));
@@ -22,7 +23,7 @@ function upload_image(&$model) {
         $validation = '';
 
         if (empty($_FILES['uploadImage'])) {
-            $validation .= "Image have not been sent.<br>";
+            $validation = "Image have not been sent.<br>";
             $model['validation'] = $validation;
             return 'upload_view';
         }
@@ -46,6 +47,16 @@ function upload_image(&$model) {
 
         if (!move_uploaded_file($_FILES['uploadImage']['tmp_name'], $target)) {
             $validation = "Upload not completed, unknown error occurred.";
+            $model['validation'] = $validation;
+            return 'upload_view';
+        }
+
+        if (!edit_image($target, WATERMARK_MODE, $_POST['watermarkText']))
+            $validation .= "Unknown error occurred, while adding watermark.<br>";
+        if (!edit_image($target, THUMBNAIL_MODE))
+            $validation .= "Unknown error occurred, while creating thumbnail.<br>";
+
+        if ($validation !== '') {
             $model['validation'] = $validation;
             return 'upload_view';
         }
