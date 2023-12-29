@@ -16,6 +16,14 @@
         <input type="file" name="uploadImage" required/>
     </label>
     <label>
+        <span>Title: </span><br/>
+        <input type="text" name="title" required/>
+    </label>
+    <label>
+        <span>Author: </span><br/>
+        <input type="text" name="author" required/>
+    </label>
+    <label>
         <span>Watermark text:</span><br/>
         <input type="text" name="watermarkText" required/>
     </label>
@@ -27,8 +35,8 @@
     <?php endif ?>
 
     <div class="centered">
-        <a href="/" class="cancel">Anuluj</a>
-        <input type="submit" value="Zapisz"/>
+        <a href="/" class="cancel">Return</a>
+        <input type="submit" value="Upload"/>
     </div>
 </form>
 
