@@ -29,19 +29,14 @@ function upload_image(&$model) {
         }
         $extension = pathinfo($_FILES['uploadImage']['name'], PATHINFO_EXTENSION);
 
-        if ($extension != "jpg" && $extension != "png")
-            $validation .= "Image has to have JPG or PNG extension.<br>";
-        if ($_FILES['uploadImage']['size'] > IMAGE_MAX_SIZE)
-            $validation .= "Max file size " . IMAGE_MAX_SIZE * 1.0 / MB_SIZE . "MB<br>";
+        validate_image_extension_and_size($validation, $extension);
 
         if ($validation !== '') {
             $model['validation'] = $validation;
             return 'upload_view';
         }
 
-        do {
-            $name = uniqid('image_');
-        } while (file_exists(IMAGE_DIR . "/" . $name));
+        generate_unique_image_id($name);
 
         $target = IMAGE_DIR . "/" . $name . "." . $extension;
 
@@ -51,10 +46,7 @@ function upload_image(&$model) {
             return 'upload_view';
         }
 
-        if (!edit_image($target, WATERMARK_MODE, $_POST['watermarkText']))
-            $validation .= "Unknown error occurred, while adding watermark.<br>";
-        if (!edit_image($target, THUMBNAIL_MODE))
-            $validation .= "Unknown error occurred, while creating thumbnail.<br>";
+        validate_thumbnail_and_watermark($validation, $target);
 
         if ($validation !== '') {
             $model['validation'] = $validation;

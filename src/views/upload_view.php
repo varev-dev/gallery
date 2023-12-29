@@ -15,7 +15,10 @@
         <span>Select image:</span><br/>
         <input type="file" name="uploadImage" required/>
     </label>
-
+    <label>
+        <span>Watermark text:</span><br/>
+        <input type="text" name="watermarkText" required/>
+    </label>
     <!--<input type="hidden" name="id" value="<?php /*= $image['_id'] */?>">-->
     <?php if(isset($validation)): ?>
         <div class="validation_error">
