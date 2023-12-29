@@ -1,6 +1,10 @@
 <?php
-const IMAGE_DIR = "images";
-const IMAGES_PER_PAGE = 12;
+const IMAGE_DIR = "images", IMAGE_BUILD_DIR = "images/build", IMAGES_PER_PAGE = 12;
+const FONT_SIZE = 35, FONT_FAMILY = "Roboto-Regular.ttf";
+const THUMBNAIL_WIDTH = 200, THUMBNAIL_HEIGHT = 125;
+const WATERMARK_MODE = "wat", THUMBNAIL_MODE = "min";
+
+require_once 'business_utils.php';
 
 function get_last_page_number(): int {
     $images = get_images();
@@ -33,4 +37,27 @@ function get_images(): array {
     }
 
     return $images;
+}
+
+function edit_image(string $path, string $mode, string $watermark = null): bool {
+    $extension = pathinfo($path,PATHINFO_EXTENSION);
+
+    if (!create_image_by_extension($image, $path, $extension))
+        return false;
+
+    if ($mode === WATERMARK_MODE) {
+        if ($watermark == null || !watermark_transformation($image, $path, $watermark))
+            return false;
+    } else if ($mode === THUMBNAIL_MODE) {
+        if (!scale_transformation($image))
+            return false;
+    } else return false;
+
+    $finalPath = substr($path, 0, strrpos($path,".")) . "-" . $mode . ".". $extension;
+
+    if (!create_image_file($image, $finalPath, $extension))
+        return false;
+
+    imagedestroy($image);
+    return true;
 }
