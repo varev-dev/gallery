@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Gallery</title>
+        <meta charset="UTF-8">
         <link rel="stylesheet" href="static/css/styles.css"/>
     </head>
     <body>
@@ -15,15 +16,17 @@
         <?php if(count($images)): ?>
             <section class="gallery">
                 <?php foreach ($images as $image): ?>
-                    <div>
+                    <div class="image_element">
                         <a href="<?=$image["name"]."-wat.".$image["extension"]?>">
                             <img class="gallery_image" src="<?=$image["name"]."-min.".$image["extension"]?>" alt="image"/>
                         </a>
+                        <h4><?=$image['title']?></h4>
+                        <p>Author: <span><?=$image['author']?></span></p>
                     </div>
                 <?php endforeach ?>
             </section>
         <?php else: ?>
-            <p>No images<?= isset($_GET['page']) ? " on page " . $_GET['page'] : ' in gallery'?></p>
+            <p>No images <?= !isset($_GET['page']) || $_GET['page'] == 1 ? " in gallery" : " on page " . $_GET['page']?></p>
         <?php endif ?>
         <div class="centered">
             <?php if ($page != 1): ?>

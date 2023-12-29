@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Gallery</title>
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="static/css/styles.css"/>
 </head>
 <body>

@@ -33,10 +33,32 @@ section.gallery {
     align-items: center;
 }
 
+.image_element {
+    width: 250px;
+}
+
+.image_element h4, .image_element p {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+.image_element h4 {
+    font-size: 18px;
+}
+
+.image_element p {
+    font-size: 14px;
+}
+
+.image_element p span {
+    text-transform: uppercase;
+}
+
 img.gallery_image {
     width: 200px;
     height: 125px;
-    padding: 15px 25px;
+    padding: 15px 25px 0 25px;
 }
 
 .centered {
