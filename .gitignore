@@ -1,5 +1,5 @@
 /.idea
 /vendor
-/src/web/images
+/src/web/images/*.*
 composer.lock
 *.js

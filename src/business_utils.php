@@ -28,8 +28,10 @@ function watermark_transformation(&$image, $path, $watermark): bool {
     $color = imagecolorallocatealpha($image, 255, 255, 255, 60);
     $font = IMAGE_BUILD_DIR . "/" . FONT_FAMILY;
     $size = getimagesize($path);
+    $fontSize = ($size[0] + $size[1]) / (2 * strlen($watermark));
+//    $marginLeft = ($size[0] - $fontSize * strlen($watermark)) /2;
 
-    if (!imagettftext($image, FONT_SIZE, 0, $size[0]/2, $size[1]/2, $color, $font, $watermark))
+    if (!imagettftext($image, $fontSize, 0, 0, $size[1]/2, $color, $font, $watermark))
         return false;
 
     return true;

@@ -4,7 +4,7 @@ use MongoDB\BSON\ObjectID;
 use MongoDB\Database;
 
 const IMAGE_DIR = "images", IMAGE_BUILD_DIR = "images/build", IMAGES_PER_PAGE = 12;
-const FONT_SIZE = 35, FONT_FAMILY = "Roboto-Regular.ttf";
+const FONT_FAMILY = "RobotoMono.ttf";
 const THUMBNAIL_WIDTH = 200, THUMBNAIL_HEIGHT = 125;
 const WATERMARK_MODE = "wat", THUMBNAIL_MODE = "min";
 
