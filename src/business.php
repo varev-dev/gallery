@@ -22,7 +22,7 @@ function get_images_from_page(int $page): array{
 
 function get_images(): array {
     $images = [];
-    $files = glob(IMAGE_DIR."/image_*-wat.*");
+    $files = glob(IMAGE_DIR.'/image_*-wat.*');
 
     $data = [
         "name" => null,
@@ -40,6 +40,10 @@ function get_images(): array {
 
         $data["name"] = substr($file, 0, strrpos($file, "-wat"));
         $data["extension"] = $extension;
+
+        if (!file_exists($data["name"].".".$data["extension"]) ||
+            !file_exists($data["name"]."-min.".$data["extension"]))
+            continue;
 
         $images[] = $data;
     }
