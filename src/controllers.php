@@ -55,6 +55,5 @@ function upload_image(&$model) {
 
         return 'redirect:/';
     }
-
     return 'upload_view';
 }

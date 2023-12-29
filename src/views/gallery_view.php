@@ -16,14 +16,14 @@
             <section class="gallery">
                 <?php foreach ($images as $image): ?>
                     <div>
-                        <a href="<?=$image?>">
-                            <img class="gallery_image" src="<?=$image?>" alt="image"/>
+                        <a href="<?=$image["name"]."-wat.".$image["extension"]?>">
+                            <img class="gallery_image" src="<?=$image["name"]."-min.".$image["extension"]?>" alt="image"/>
                         </a>
                     </div>
                 <?php endforeach ?>
             </section>
         <?php else: ?>
-            <p>No images<?= isset($_GET['page']) ? " on page " . $_GET['page'] : 'in gallery'?></p>
+            <p>No images<?= isset($_GET['page']) ? " on page " . $_GET['page'] : ' in gallery'?></p>
         <?php endif ?>
         <div class="centered">
             <?php if ($page != 1): ?>
