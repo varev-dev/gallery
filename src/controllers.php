@@ -22,34 +22,51 @@ function upload_image(&$model) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $validation = '';
 
-        if (empty($_FILES['uploadImage'])) {
-            $validation = "Image have not been sent.<br>";
+        if (!isset($_POST['title']) || !isset($_POST['author']) || !isset($_POST['watermarkText'])) {
+            $model['validation'] = "Image title or/and author or/and watermark not set.";
+            return 'upload_view';
+        }
+
+        sanitize_form($_POST);
+        validate_upload_form($_POST, $validation);
+
+        if (empty($_FILES['uploadImage']))
+            $validation .= "Image have not been sent.";
+
+        if ($validation != '') {
             $model['validation'] = $validation;
             return 'upload_view';
         }
+
         $extension = pathinfo($_FILES['uploadImage']['name'], PATHINFO_EXTENSION);
 
         validate_image_extension_and_size($validation, $extension);
-
         if ($validation !== '') {
             $model['validation'] = $validation;
             return 'upload_view';
         }
 
         generate_unique_image_id($name);
-
         $target = IMAGE_DIR . "/" . $name . "." . $extension;
-
         if (!move_uploaded_file($_FILES['uploadImage']['tmp_name'], $target)) {
-            $validation = "Upload not completed, unknown error occurred.";
-            $model['validation'] = $validation;
+            $model['validation'] = "Upload not completed, unknown error occurred.";
             return 'upload_view';
         }
 
         validate_thumbnail_and_watermark($validation, $target);
-
         if ($validation !== '') {
             $model['validation'] = $validation;
+            return 'upload_view';
+        }
+
+        $image = [
+            "name" => $name,
+            "extension" => $extension,
+            "title" => $_POST['title'],
+            "author" => $_POST['author']
+        ];
+        if(!save_image($image)) {
+            $model['validation'] = "Saving image in database went wrong.";
             return 'upload_view';
         }
 
