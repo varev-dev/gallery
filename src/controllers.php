@@ -156,7 +156,8 @@ function login(&$model): string {
 
 function logout(): string {
     if (isset($_SESSION['user_id'])) {
-        session_reset();
+        session_destroy();
+        session_start();
         session_regenerate_id();
         setcookie("alert", "Successfully logged out.", time() + 1);
     }
