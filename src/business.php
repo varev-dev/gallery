@@ -35,39 +35,6 @@ function get_images_from_page(int $page): array{
     return $images;
 }
 
-function get_images(): array {
-    $images = [];
-    $files = glob(IMAGE_DIR.'/image_*-wat.*');
-
-    $data = [
-        "name" => null,
-        "extension" => null,
-        "title" => null,
-        "author" => null
-    ];
-
-    if (!$files)
-        return [];
-
-    foreach ($files as $file) {
-        $extension = pathinfo($file, PATHINFO_EXTENSION);
-
-        if ($extension != "jpg" && $extension != "png")
-            continue;
-
-        $data["name"] = substr($file, 0, strrpos($file, "-wat"));
-        $data["extension"] = $extension;
-
-        if (!file_exists($data["name"].".".$extension) ||
-            !file_exists($data["name"]."-min.".$extension))
-            continue;
-
-        $images[] = $data;
-    }
-
-    return $images;
-}
-
 function edit_image(string $path, string $mode, string $watermark = null): bool {
     $extension = pathinfo($path,PATHINFO_EXTENSION);
 
@@ -93,10 +60,17 @@ function edit_image(string $path, string $mode, string $watermark = null): bool 
 
 function save_image($image): bool {
     $db = get_db();
-    return $db->images->insertOne($image)->isAcknowledged();
+
+    try {
+        $db->images->insertOne($image);
+    } catch (\MongoDB\Exception\Exception $e) {
+        return false;
+    }
+
+    return true;
 }
 
-function get_images_from_db(int $page): array {
+function get_images_from_db(int $page) {
     $db = get_db();
 
     $options = [
@@ -104,21 +78,47 @@ function get_images_from_db(int $page): array {
         'limit' => IMAGES_PER_PAGE
     ];
 
-    return $db->images->find([], $options)->toArray();
+    try {
+        $images = $db->images->find([], $options)->toArray();
+    } catch (\MongoDB\Exception\Exception $e) {
+        return null;
+    }
+
+    return $images;
 }
 
 function number_of_images_in_db(): int {
     $db = get_db();
 
-    return $db->images->count();
+    try {
+        $count = $db->images->count();
+    } catch (\MongoDB\Exception\Exception $e) {
+        return false;
+    }
+
+    return $count;
 }
 
 function save_user($user): bool {
     $db = get_db();
-    return $db->users->insertOne($user)->isAcknowledged();
+
+    try {
+        $db->users->insertOne($user);
+    } catch (\MongoDB\Exception\Exception $e) {
+        return false;
+    }
+
+    return true;
 }
 
 function get_user_by_login($login) {
     $db = get_db();
-    return $db->users->findOne(['login' => $login]);
+
+    try {
+        $user = $db->users->findOne(['login' => $login]);
+    } catch (\MongoDB\Exception\Exception $e) {
+        return null;
+    }
+
+    return $user;
 }
