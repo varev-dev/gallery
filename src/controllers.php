@@ -135,6 +135,7 @@ function login(&$model): string {
     ];
 
     sanitize_login_form($login);
+    escape_login_data($login);
     $user = get_user_by_login($_POST['login']);
 
     if ($user == null) {

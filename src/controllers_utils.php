@@ -25,6 +25,7 @@ function sanitize_form(&$data) {
     $data['author'] = filter_var(trim($data['author']), FILTER_SANITIZE_STRING);
     $data['watermarkText'] = filter_var(trim($data['watermarkText']), FILTER_SANITIZE_STRING);
 }
+
 function validate_upload_form($data, &$validation) {
     if(empty($data['title']))
         $validation .= "Incorrect title input.<br>";
@@ -32,15 +33,6 @@ function validate_upload_form($data, &$validation) {
         $validation .= "Incorrect author input.<br>";
     if (empty($data['watermarkText']))
         $validation .= "Incorrect watermark input.<br>";
-}
-
-function check_if_no_special_chars(string $text): bool {
-    $pattern = "/^[a-zA-Z0-9@#$%&*()!?:._\-+=\"' ]{3,127}$/";
-
-    if (!preg_match($pattern, $text))
-        return false;
-
-    return true;
 }
 
 function check_is_register_form_set(array $data): string {
@@ -59,9 +51,9 @@ function check_is_register_form_set(array $data): string {
 }
 
 function sanitize_register_data(array &$data) {
-    $data['login'] = filter_var($data['login'], FILTER_SANITIZE_STRING);
-    $data['email'] = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
-    $data['pwd'] = filter_var($data['pwd'], FILTER_SANITIZE_STRING);
+    $data['login'] = filter_var(trim($data['login']), FILTER_SANITIZE_STRING);
+    $data['email'] = filter_var(trim($data['email']), FILTER_SANITIZE_EMAIL);
+    $data['pwd'] = filter_var(trim($data['pwd']), FILTER_SANITIZE_STRING);
 }
 
 function validate_register_form(array $data, string $pwd_rp): string {
@@ -84,8 +76,18 @@ function match_to_pattern(string $text, string $pattern, int $min_length, int $m
     return preg_match($pattern, $text);
 }
 
-function escape_user_data(array &$user) {
+function escape_register_data(array &$user) {
     $user['login'] = htmlentities($user['login'], ENT_QUOTES, 'UTF-8');
     $user['email'] = htmlentities($user['email'], ENT_QUOTES, 'UTF-8');
+    $user['pwd'] = htmlentities($user['pwd'], ENT_QUOTES, 'UTF-8');
+}
+
+function sanitize_login_form(array &$data) {
+    $data['login'] = filter_var(trim($data['login']), FILTER_SANITIZE_STRING);
+    $data['pwd'] = filter_var(trim($data['pwd']), FILTER_SANITIZE_STRING);
+}
+
+function escape_login_data(array &$user) {
+    $user['login'] = htmlentities($user['login'], ENT_QUOTES, 'UTF-8');
     $user['pwd'] = htmlentities($user['pwd'], ENT_QUOTES, 'UTF-8');
 }
