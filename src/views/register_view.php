@@ -28,7 +28,7 @@
         <span>Repeat password:</span><br/>
         <input type="password" name="pwd_rp" required/>
     </label>
-    <!--<input type="hidden" name="id" value="<?php /*= $image['_id'] */?>">-->
+
     <?php if(isset($validation)): ?>
         <div class="validation_error">
             <h4 class="validation_content"><?=$validation?></h4>

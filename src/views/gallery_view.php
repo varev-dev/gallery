@@ -9,7 +9,17 @@
         <header>
             <div>
                 <h1 class="title_bar">Gallery</h1>
-                <a href="/upload"><button>Upload Image</button></a>
+                <?php if (isset($_COOKIE['alert'])): ?>
+                    <p><?=$_COOKIE['alert']?></p>
+                <?php endif; ?>
+                <div>
+                    <a href="/upload"><button>Upload Image</button></a>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <a href="/logout"><button>Logout</button></a>
+                    <?php else: ?>
+                        <a href="/login"><button>Login</button></a>
+                    <?php endif; ?>
+                </div>
             </div>
             <hr>
         </header>
