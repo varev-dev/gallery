@@ -7,26 +7,17 @@
 </head>
 <body>
 <header>
-    <h1 class="title_bar">Image Upload</h1>
+    <h1 class="title_bar">Login</h1>
     <hr>
 </header>
-
 <form method="post" enctype="multipart/form-data" class="form">
     <label>
-        <span>Select image:</span><br/>
-        <input type="file" name="uploadImage" required/>
+        <span>Login: </span><br/>
+        <input type="text" name="login" required/>
     </label>
     <label>
-        <span>Title: </span><br/>
-        <input type="text" name="title" required/>
-    </label>
-    <label>
-        <span>Author: </span><br/>
-        <input type="text" name="author" required/>
-    </label>
-    <label>
-        <span>Watermark text:</span><br/>
-        <input type="text" name="watermarkText" required/>
+        <span>Password: </span><br/>
+        <input type="password" name="pwd" required/>
     </label>
     <!--<input type="hidden" name="id" value="<?php /*= $image['_id'] */?>">-->
     <?php if(isset($validation)): ?>
@@ -37,7 +28,8 @@
 
     <div class="centered">
         <a href="/" class="cancel">Return</a>
-        <input type="submit" value="Upload"/>
+        <a href="/register" class="cancel">Register</a>
+        <input type="submit" value="Login"/>
     </div>
 </form>
 
