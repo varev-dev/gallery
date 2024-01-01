@@ -112,3 +112,13 @@ function number_of_images_in_db(): int {
 
     return $db->images->count();
 }
+
+function save_user($user): bool {
+    $db = get_db();
+    return $db->users->insertOne($user)->isAcknowledged();
+}
+
+function get_user_by_login($login) {
+    $db = get_db();
+    return $db->users->findOne(['login' => $login]);
+}
