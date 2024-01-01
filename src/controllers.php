@@ -79,7 +79,7 @@ function upload_image(&$model): string {
 
 function register(&$model): string {
     if (isset($_SESSION['user_id']))
-        return 'gallery_view';
+        return 'redirect:/';
 
     $model['login_length'] = MIN_LOGIN_LENGTH;
     $model['pwd_length'] = MIN_PASSWORD_LENGTH;
@@ -100,13 +100,18 @@ function register(&$model): string {
     ];
     sanitize_register_data($user);
 
+    if (get_user_by_login($user['login']) != null) {
+        $model['validation'] = "Login already in use, choose different one.";
+        return 'register_view';
+    }
+
     $validation = validate_register_form($user, $_POST['pwd_rp']);
     if ($validation !== "") {
         $model['validation'] = $validation;
         return 'register_view';
     }
 
-    escape_user_data($user);
+    escape_register_data($user);
     $user['pwd'] = password_hash($user['pwd'], PASSWORD_BCRYPT);
     if (!save_user($user)) {
         $model['validation'] = "Error appeared while saving user, try again.";
@@ -119,8 +124,41 @@ function register(&$model): string {
 
 function login(&$model): string {
     if (isset($_SESSION['user_id']))
-        return 'gallery_view';
+        return 'redirect:/';
 
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+        return "login_view";
+
+    $login = [
+        'login' => $_POST['login'],
+        'pwd' => $_POST['pwd']
+    ];
+
+    sanitize_login_form($login);
+    $user = get_user_by_login($_POST['login']);
+
+    if ($user == null) {
+        $model['validation'] = "Wrong login.";
+        return 'login_view';
+    }
+
+    if(!password_verify($login['pwd'], $user['pwd'])) {
+        $model['validation'] = "Wrong password.";
+        return 'login_view';
+    }
+
+    $_SESSION['user_id'] = $user['_id'];
+    setcookie("alert", "Successfully logged in.", time() + 1);
     session_regenerate_id();
-    return 'login_view';
+    return 'redirect:/';
+}
+
+function logout(): string {
+    if (isset($_SESSION['user_id'])) {
+        session_reset();
+        session_regenerate_id();
+        setcookie("alert", "Successfully logged out.", time() + 1);
+    }
+
+    return 'redirect:/';
 }
