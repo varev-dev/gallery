@@ -4,8 +4,10 @@ require_once 'business.php';
 
 define("IMAGE_MAX_SIZE", pow(2, 20));
 define("MB_SIZE", pow(2, 20));
+const MIN_LOGIN_LENGTH = 3;
+const MIN_PASSWORD_LENGTH = 8;
 
-function gallery(&$model) {
+function gallery(&$model): string {
     $page = $_GET['page'] ?? 1;
 
     if ($page < 1)
@@ -18,7 +20,7 @@ function gallery(&$model) {
     return 'gallery_view';
 }
 
-function upload_image(&$model) {
+function upload_image(&$model): string {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $validation = '';
 
@@ -73,4 +75,52 @@ function upload_image(&$model) {
         return 'redirect:/';
     }
     return 'upload_view';
+}
+
+function register(&$model): string {
+    if (isset($_SESSION['user_id']))
+        return 'gallery_view';
+
+    $model['login_length'] = MIN_LOGIN_LENGTH;
+    $model['pwd_length'] = MIN_PASSWORD_LENGTH;
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+        return 'register_view';
+
+    $validation = check_is_register_form_set($_POST);
+    if ($validation !== "") {
+        $model['validation'] = $validation;
+        return 'register_view';
+    }
+
+    $user = [
+        'login' => $_POST['login'],
+        'email' => $_POST['email'],
+        'pwd' => $_POST['pwd']
+    ];
+    sanitize_register_data($user);
+
+    $validation = validate_register_form($user, $_POST['pwd_rp']);
+    if ($validation !== "") {
+        $model['validation'] = $validation;
+        return 'register_view';
+    }
+
+    escape_user_data($user);
+    $user['pwd'] = password_hash($user['pwd'], PASSWORD_BCRYPT);
+    if (!save_user($user)) {
+        $model['validation'] = "Error appeared while saving user, try again.";
+        return 'register_view';
+    }
+
+    $model['validation'] = "Successfully registered.";
+    return 'redirect:/login';
+}
+
+function login(&$model): string {
+    if (isset($_SESSION['user_id']))
+        return 'gallery_view';
+
+    session_regenerate_id();
+    return 'login_view';
 }
