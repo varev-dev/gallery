@@ -25,6 +25,20 @@ function get_last_page_number(): int {
     return ceil(number_of_images_in_db() / IMAGES_PER_PAGE);
 }
 
+function get_image_by_id($id) {
+    $db = get_db();
+
+    try {
+        $image = $db->images->findOne(['_id' => new ObjectID($id)]);
+    } catch (\MongoDB\Exception\Exception $e) {
+        return array();
+    }
+
+    $image["name"] = IMAGE_DIR . "/" . $image["name"];
+
+    return $image;
+}
+
 function get_images_from_page(int $page): array{
     $images = get_images_from_db($page);
 
