@@ -13,6 +13,7 @@ function gallery(&$model): string {
     if ($page < 1)
         return 'redirect:/';
 
+    $model["logged_in"] = isset($_SESSION['user_id']);
     $model["page"] = $page;
     $model["maxPage"] = get_last_page_number();
     $model["images"] = get_images_from_page($page);
@@ -149,13 +150,16 @@ function login(&$model): string {
     }
 
     $_SESSION['user_id'] = $user['_id'];
+    session_regenerate_id(true);
     setcookie("alert", "Successfully logged in.", time() + 1);
-    session_regenerate_id();
+
     return 'redirect:/';
 }
 
 function logout(): string {
     if (isset($_SESSION['user_id'])) {
+        foreach ($_COOKIE as $key => $value)
+            setcookie($key, null, 1);
         session_unset();
         session_destroy();
         session_start();
@@ -163,4 +167,30 @@ function logout(): string {
     }
 
     return 'redirect:/';
+}
+
+function save_images(): string {
+    if ($_SERVER['REQUEST_METHOD'] != "POST" && isset($_SESSION['user_id'])) {
+        return 'redirect:/';
+    }
+
+    if (isset($_POST['save'])) {
+        add_saved_images($_POST['save']);
+        $count = count($_POST['save']);
+    } else {
+        $count = 0;
+    }
+
+    setcookie("alert", "Saved $count images.", time() + 1);
+    return 'redirect:/';
+}
+
+function saved(&$model): string {
+    if (isset($_SESSION['user_id']))
+        return 'redirect:/';
+
+    $images = get_saved_images();
+    $model['images'] = $images;
+
+    return 'saved_view';
 }
