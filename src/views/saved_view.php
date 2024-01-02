@@ -37,6 +37,7 @@
                 <input type="submit" value="Remove Checked from Saved"/>
             </div>
         </form>
+        <?php include "partial/manage_page.php"; ?>
     <?php else: ?>
         <p class="centered">0 saved images</p>
     <?php endif; ?>

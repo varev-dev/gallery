@@ -9,19 +9,17 @@ const MIN_PASSWORD_LENGTH = 8;
 
 function gallery(&$model): string {
     $page = $_GET['page'] ?? 1;
-
-    if ($page < 1)
-        return 'redirect:/';
+    $page = min(get_last_page_number(), $page);
+    $page = max($page, 1);
 
     if (isset($_COOKIE['alert']))
         $model['alert'] = $_COOKIE['alert'];
 
-
     $model['saved'] = get_saved_images();
-    $model["logged_in"] = isset($_SESSION['user_id']);
-    $model["page"] = $page;
-    $model["maxPage"] = get_last_page_number();
-    $model["images"] = get_images_from_page($page);
+    $model['logged_in'] = isset($_SESSION['user_id']);
+    $model['page'] = $page;
+    $model['max_page'] = get_last_page_number();
+    $model['images'] = get_images_from_page($page);
 
     return 'gallery_view';
 }
@@ -186,7 +184,7 @@ function save_images(): string {
     }
 
     setcookie("alert", "Saved $count images.", time() + 1);
-    return 'redirect:/';
+    return 'redirect:/saved';
 }
 
 function remove_images(): string {
@@ -208,9 +206,19 @@ function saved(&$model): string {
     if (isset($_COOKIE['alert']))
         $model['alert'] = $_COOKIE['alert'];
 
-    $model['logged_in'] = isset($_SESSION['user_id']);
     $images = get_saved_images();
+
+    $max_pages = ceil(count($images)/IMAGES_PER_PAGE);
+    $page = $_GET['page'] ?? 1;
+    $page = min($max_pages, $page);
+    $page = max($page, 1);
+
+    $images = array_slice($images, ($page - 1) * IMAGES_PER_PAGE, IMAGES_PER_PAGE);
+
+    $model['page'] = $page;
+    $model['max_page'] = $max_pages;
     $model['images'] = $images;
+    $model['logged_in'] = isset($_SESSION['user_id']);
 
     return 'saved_view';
 }
