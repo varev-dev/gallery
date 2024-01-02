@@ -170,7 +170,7 @@ function logout(): string {
 }
 
 function save_images(): string {
-    if ($_SERVER['REQUEST_METHOD'] != "POST" && isset($_SESSION['user_id'])) {
+    if ($_SERVER['REQUEST_METHOD'] != "POST" || !isset($_SESSION['user_id'])) {
         return 'redirect:/';
     }
 
@@ -185,10 +185,26 @@ function save_images(): string {
     return 'redirect:/';
 }
 
-function saved(&$model): string {
-    if (isset($_SESSION['user_id']))
+function remove_images(): string {
+    if ($_SERVER['REQUEST_METHOD'] != "POST" || !isset($_SESSION['user_id']))
         return 'redirect:/';
 
+    if (isset($_POST['unsave'])) {
+        remove_saved_images($_POST['unsave']);
+        $count = count($_POST['unsave']);
+    } else {
+        $count = 0;
+    }
+
+    setcookie("alert", "Removed $count images.", time() + 1);
+    return 'redirect:/saved';
+}
+
+function saved(&$model): string {
+    if (!isset($_SESSION['user_id']))
+        return 'redirect:/';
+
+    $model["logged_in"] = isset($_SESSION['user_id']);
     $images = get_saved_images();
     $model['images'] = $images;
 

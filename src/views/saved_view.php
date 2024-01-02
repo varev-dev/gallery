@@ -9,6 +9,9 @@
     <header>
         <div>
             <h1 class="title_bar">Saved Images</h1>
+            <?php if (isset($_COOKIE['alert'])): ?>
+                <p><?=$_COOKIE['alert']?></p>
+            <?php endif; ?>
             <div>
                 <?php if (isset($logged_in)): ?>
                     <a href="/logout"><button>Logout</button></a>

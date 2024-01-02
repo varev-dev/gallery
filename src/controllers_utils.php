@@ -116,7 +116,7 @@ function add_saved_images(array $imagesToSave): int {
 
     $counter = 0;
     foreach ($imagesToSave as $image) {
-        if (!array_key_exists($image, $_SESSION['saved_images_id'])) {
+        if (!in_array($image, $_SESSION['saved_images_id'])) {
             $_SESSION['saved_images_id'][] = $image;
             $counter++;
         }
@@ -130,10 +130,12 @@ function remove_saved_images(array $imagesToRemove): int {
 
     $counter = 0;
     foreach ($imagesToRemove as $image) {
-        if (array_key_exists($image, $_SESSION['saved_images_id'])) {
-            unset($_SESSION['saved_images_id'][$image]);
+        $exists = array_search($image, $_SESSION['saved_images_id']);
+        if ($exists !== false) {
+            unset($_SESSION['saved_images_id'][$exists]);
             $counter++;
         }
     }
+
     return $counter;
 }
