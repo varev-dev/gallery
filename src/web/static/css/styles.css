@@ -24,7 +24,7 @@ hr {
     color: #1794c9;
 }
 
-section.gallery {
+.gallery {
     margin: auto;
     max-width: 1000px;
     display: flex;
@@ -35,6 +35,7 @@ section.gallery {
 
 .image_element {
     width: 250px;
+    text-align: center;
 }
 
 .image_element h4, .image_element p {
@@ -53,6 +54,14 @@ section.gallery {
 
 .image_element p span {
     text-transform: uppercase;
+}
+
+.new_row {
+    display: block;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    padding: 20px 0;
 }
 
 img.gallery_image {

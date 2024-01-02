@@ -14,7 +14,7 @@
                 <?php endif; ?>
                 <div>
                     <a href="/upload"><button>Upload Image</button></a>
-                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php if (isset($logged_in)): ?>
                         <a href="/logout"><button>Logout</button></a>
                     <?php else: ?>
                         <a href="/login"><button>Login</button></a>
@@ -24,7 +24,7 @@
             <hr>
         </header>
         <?php if(count($images)): ?>
-            <section class="gallery">
+            <<?=isset($logged_in) ? 'form method="post" action="/save"' : 'session'?> class="gallery">
                 <?php foreach ($images as $image): ?>
                     <div class="image_element">
                         <a href="<?=$image["name"]."-wat.".$image["extension"]?>">
@@ -32,9 +32,20 @@
                         </a>
                         <h4><?=$image['title']?></h4>
                         <p>Author: <span><?=$image['author']?></span></p>
+                        <?php if(isset($_SESSION['user_id'])): ?>
+                            <label class="img_check">
+                                <span>Save: </span>
+                                <input type="checkbox" name="save" value="<?=$image['_id']?>"/>
+                            </label>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach ?>
-            </section>
+                <?php if(isset($logged_in)): ?>
+                    <div class="new_row">
+                        <input type="submit" value="Save Checked"/>
+                    </div>
+                <?php endif; ?>
+            </<?=isset($logged_in) ? 'form' : 'session'?>>
         <?php else: ?>
             <p>No images <?= !isset($_GET['page']) || $_GET['page'] == 1 ? " in gallery" : " on page " . $_GET['page']?></p>
         <?php endif ?>
