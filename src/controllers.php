@@ -46,7 +46,7 @@ function upload_image(&$model): string {
 
         $extension = pathinfo($_FILES['uploadImage']['name'], PATHINFO_EXTENSION);
 
-        validate_image_extension_and_size($validation, $extension);
+        validate_image_extension_and_size($validation, $_FILES['uploadImage']['type']);
         if ($validation !== '') {
             $model['validation'] = $validation;
             return 'upload_view';
@@ -59,7 +59,7 @@ function upload_image(&$model): string {
             return 'upload_view';
         }
 
-        validate_thumbnail_and_watermark($validation, $target);
+        validate_thumbnail_and_watermark($validation, $_FILES['uploadImage']['type'], $target);
         if ($validation !== '') {
             $model['validation'] = $validation;
             return 'upload_view';

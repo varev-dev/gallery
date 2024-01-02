@@ -49,10 +49,10 @@ function get_images_from_page(int $page): array{
     return $images;
 }
 
-function edit_image(string $path, string $mode, string $watermark = null): bool {
+function edit_image(string $path, string $mode, string $fileType, string $watermark = null): bool {
     $extension = pathinfo($path,PATHINFO_EXTENSION);
 
-    if (!create_image_by_extension($image, $path, $extension))
+    if (!create_image_by_extension($image, $path, $fileType))
         return false;
 
     if ($mode === WATERMARK_MODE) {
@@ -65,7 +65,7 @@ function edit_image(string $path, string $mode, string $watermark = null): bool 
 
     $finalPath = substr($path, 0, strrpos($path,".")) . "-" . $mode . ".". $extension;
 
-    if (!create_image_file($image, $finalPath, $extension))
+    if (!create_image_file($image, $finalPath, $fileType))
         return false;
 
     imagedestroy($image);

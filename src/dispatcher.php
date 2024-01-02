@@ -4,10 +4,19 @@ const REDIRECT_PREFIX = 'redirect:';
 
 function dispatch($routing, $action_url)
 {
-    $controller_name = $routing[$action_url];
-
-    $model = [];
-    $view_name = $controller_name($model);
+    if (array_key_exists($action_url, $routing)) {
+        $controller_name = $routing[$action_url];
+        $model = [];
+        $view_name = $controller_name($model);
+    } else {
+        if ($action_url != "/404") {
+            $model = [];
+            $view_name = "redirect:/404";
+        } else {
+            $model = [];
+            $view_name = "404";
+        }
+    }
 
     build_response($view_name, $model);
 }
