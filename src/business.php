@@ -136,3 +136,51 @@ function get_user_by_login($login) {
 
     return $user;
 }
+
+function get_saved_images(): array {
+    if (!isset($_SESSION['saved_images_id'])) {
+        $_SESSION['saved_images_id'] = array();
+        return array();
+    }
+
+    $images = array();
+
+    foreach ($_SESSION['saved_images_id'] as $saved) {
+        $image = get_image_by_id($saved);
+
+        if ($image)
+            $images[] = $image;
+    }
+
+    return $images;
+}
+
+function add_saved_images(array $imagesToSave): int {
+    if (!isset($_SESSION['saved_images_id']))
+        $_SESSION['saved_images_id'] = array();
+
+    $counter = 0;
+    foreach ($imagesToSave as $image) {
+        if (!in_array($image, $_SESSION['saved_images_id'])) {
+            $_SESSION['saved_images_id'][] = $image;
+            $counter++;
+        }
+    }
+    return $counter;
+}
+
+function remove_saved_images(array $imagesToRemove): int {
+    if (!isset($_SESSION['saved_images_id']))
+        return 0;
+
+    $counter = 0;
+    foreach ($imagesToRemove as $image) {
+        $exists = array_search($image, $_SESSION['saved_images_id']);
+        if ($exists !== false) {
+            unset($_SESSION['saved_images_id'][$exists]);
+            $counter++;
+        }
+    }
+
+    return $counter;
+}
