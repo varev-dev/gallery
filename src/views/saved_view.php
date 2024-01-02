@@ -9,11 +9,11 @@
     <header>
         <div>
             <h1 class="title_bar">Saved Images</h1>
-            <?php if (isset($_COOKIE['alert'])): ?>
-                <p><?=$_COOKIE['alert']?></p>
+            <?php if (isset($alert)): ?>
+                <p><?=$alert?></p>
             <?php endif; ?>
             <div>
-                <?php if (isset($logged_in)): ?>
+                <?php if ($logged_in): ?>
                     <a href="/logout"><button>Logout</button></a>
                 <?php else: ?>
                     <a href="/login"><button>Login</button></a>
@@ -27,19 +27,15 @@
             <?php foreach ($images as $image): ?>
             <div class="image_element">
                 <?php include "partial/image.php"?>
-                <?php if($logged_in): ?>
-                    <label class="img_check">
-                        <span>Unsave: </span>
-                        <input type="checkbox" name="unsave[]" value="<?=$image['_id']?>"/>
-                    </label>
-                <?php endif; ?>
+                <label class="img_check">
+                    <span>Unsave: </span>
+                    <input type="checkbox" name="unsave[]" value="<?=$image['_id']?>"/>
+                </label>
             </div>
             <?php endforeach; ?>
-        <?php if(isset($logged_in)): ?>
             <div class="new_row">
                 <input type="submit" value="Remove Checked from Saved"/>
             </div>
-        <?php endif; ?>
         </form>
     <?php else: ?>
         <p class="centered">0 saved images</p>

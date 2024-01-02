@@ -13,6 +13,11 @@ function gallery(&$model): string {
     if ($page < 1)
         return 'redirect:/';
 
+    if (isset($_COOKIE['alert']))
+        $model['alert'] = $_COOKIE['alert'];
+
+
+    $model['saved'] = get_saved_images();
     $model["logged_in"] = isset($_SESSION['user_id']);
     $model["page"] = $page;
     $model["maxPage"] = get_last_page_number();
@@ -170,9 +175,8 @@ function logout(): string {
 }
 
 function save_images(): string {
-    if ($_SERVER['REQUEST_METHOD'] != "POST" || !isset($_SESSION['user_id'])) {
+    if ($_SERVER['REQUEST_METHOD'] != "POST")
         return 'redirect:/';
-    }
 
     if (isset($_POST['save'])) {
         add_saved_images($_POST['save']);
@@ -186,7 +190,7 @@ function save_images(): string {
 }
 
 function remove_images(): string {
-    if ($_SERVER['REQUEST_METHOD'] != "POST" || !isset($_SESSION['user_id']))
+    if ($_SERVER['REQUEST_METHOD'] != "POST")
         return 'redirect:/';
 
     if (isset($_POST['unsave'])) {
@@ -201,10 +205,10 @@ function remove_images(): string {
 }
 
 function saved(&$model): string {
-    if (!isset($_SESSION['user_id']))
-        return 'redirect:/';
+    if (isset($_COOKIE['alert']))
+        $model['alert'] = $_COOKIE['alert'];
 
-    $model["logged_in"] = isset($_SESSION['user_id']);
+    $model['logged_in'] = isset($_SESSION['user_id']);
     $images = get_saved_images();
     $model['images'] = $images;
 
