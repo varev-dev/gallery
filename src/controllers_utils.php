@@ -2,7 +2,7 @@
 
 function validate_image_extension_and_size(string &$validation, string $fileType) {
     if ($fileType != "image/jpeg" && $fileType != "image/png")
-        $validation .= "Image has to have JPG or PNG extension.<br>";
+        $validation .= "Image have to be JPEG or PNG type.<br>";
     if ($_FILES['uploadImage']['size'] > IMAGE_MAX_SIZE)
         $validation .= "Max file size " . IMAGE_MAX_SIZE * 1.0 / MB_SIZE . "MB<br>";
 }
