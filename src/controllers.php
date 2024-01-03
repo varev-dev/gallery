@@ -25,6 +25,15 @@ function gallery(&$model): string {
 }
 
 function upload_image(&$model): string {
+    $model['logged_in'] = isset($_SESSION['user_id']);
+    if (isset($_SESSION['user_id'])) {
+        $user = get_user_by_id($_SESSION['user_id']);
+        if ($user) {
+            $model['user_id'] = $user['_id'];
+            $model['login'] = $user['login'];
+        }
+    }
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $validation = '';
 
@@ -65,12 +74,19 @@ function upload_image(&$model): string {
             return 'upload_view';
         }
 
+        $visibility = $_POST['visibility'] ?? "public";
+        if (!in_array($visibility, ["public", "private"]))
+            $visibility = "public";
+
         $image = [
             "name" => $name,
             "extension" => $extension,
             "title" => $_POST['title'],
-            "author" => $_POST['author']
+            "author" => $_POST['author'],
+            "author_id" => $_SESSION['user_id'] ?? "",
+            "visibility" => $visibility
         ];
+
         if(!save_image($image)) {
             $model['validation'] = "Saving image in database went wrong.";
             return 'upload_view';
@@ -78,6 +94,7 @@ function upload_image(&$model): string {
 
         return 'redirect:/';
     }
+
     return 'upload_view';
 }
 

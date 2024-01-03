@@ -22,13 +22,24 @@
     </label>
     <label>
         <span>Author: </span><br/>
-        <input type="text" name="author" required/>
+        <input type="text" name="author" value="<?php if ($logged_in) echo $login;?>" required/>
     </label>
     <label>
         <span>Watermark text:</span><br/>
         <input type="text" name="watermarkText" required/>
     </label>
-
+    <?php if ($logged_in): ?>
+        <div>
+            <label>
+                <input type="radio" name="visibility" value="private" checked required> Private
+            </label>
+            <label>
+                <input type="radio" name="visibility" value="public" required> Public
+            </label>
+        </div>
+    <?php else: ?>
+        <input type="radio" name="visibility" value="public" checked hidden>
+    <?php endif; ?>
     <?php if(isset($validation)): ?>
         <div class="validation_error">
             <h4 class="validation_content"><?=$validation?></h4>
