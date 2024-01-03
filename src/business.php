@@ -87,13 +87,18 @@ function save_image($image): bool {
 function get_images_from_db(int $page) {
     $db = get_db();
 
+    if (isset($_SESSION['user_id']))
+        $query = ['$or' => [['visibility' => 'public'], ['visibility' => 'private', 'author_id' => $_SESSION['user_id']]]];
+    else
+        $query = ['visibility' => 'public'];
+
     $options = [
         'skip' => ($page-1) * IMAGES_PER_PAGE,
         'limit' => IMAGES_PER_PAGE
     ];
 
     try {
-        $images = $db->images->find([], $options)->toArray();
+        $images = $db->images->find($query, $options)->toArray();
     } catch (\MongoDB\Exception\Exception $e) {
         return null;
     }
@@ -123,6 +128,18 @@ function save_user($user): bool {
     }
 
     return true;
+}
+
+function get_user_by_id($id) {
+    $db = get_db();
+
+    try {
+        $user = $db->users->findOne(['_id' => new ObjectID($id)]);
+    } catch (\MongoDB\Exception\Exception $e) {
+        return null;
+    }
+
+    return $user;
 }
 
 function get_user_by_login($login) {
